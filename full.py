@@ -4,7 +4,6 @@ import numpy as np
 import datetime
 from netCDF4 import Dataset, date2num
 
-
 DATE = "20220215"
 TIME = "0030"
 WIDTH = 800
@@ -16,25 +15,28 @@ radars = ['va', 'ba', 'pm']
 
 def check_pixels(pixel_map, x, y, width, height, filter_size, num_count):
     if x < filter_size or y < filter_size or x + filter_size // 2 >= width or y + filter_size // 2 >= height :
-        return False
+        return False, 0
     count = 0
+    closest_pixel = 0
+    dif = 999999
     for i in range(-filter_size//2, filter_size // 2):
-        if 100 < pixel_map[min(x - i, 0), max(y - i, height)] < 109:
-            count += 1
-    
-    return 100 < pixel_map[x, y] < 109 and count < num_count
+        for j in range(-filter_size//2, filter_size // 2):
+            if 100 < pixel_map[x - i, y - j] < 109:
+                count += 1
+            elif dif > i + j:
+                dif = i + j
+                closest_pixel = pixel_map[x - i, y - j]
+    return bool(100 < pixel_map[x, y] < 109 and count < num_count), closest_pixel
 
 def remove_interferences(orig_image, mod_image):
-    print(orig_image)
     orig_pixel_map = orig_image.load()
     mod_pixel_map = mod_image.load()
     width, height = orig_image.size
     for x in range(width):
         for y in range(height):
-            if check_pixels(orig_pixel_map, x, y, width, height, 50, 40):
-                mod_pixel_map[x, y] = 0
-    mod_image.save('check.png')
-    # print(mod_image)
+            is_interf, closest_pixel = check_pixels(orig_pixel_map, x, y, width, height, 16, 150)
+            if is_interf:
+                mod_pixel_map[x, y] = closest_pixel
     return mod_image
 
 def overlap(names_radars):
@@ -46,7 +48,6 @@ def overlap(names_radars):
         orig_image = Image.open(name)
         mod_image = Image.open(name)
         img = remove_interferences(orig_image, mod_image)
-        img = Image.open('check.png')
         img = img.convert('RGB')
         img_map = img.load()
         put_x = locate_x[radar]
