@@ -29,6 +29,6 @@ Below you can see some examples of our processed data. In the left, it shows the
 * Sherkhan Azimov
 * SM Zahid Hasan
 * Lunara Nurgaliyeva
-* Dariya
-* Modlir
+* Daria Butyrskaya
+* Moldir Koishybayeva
 
