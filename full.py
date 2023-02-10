@@ -4,6 +4,7 @@ import numpy as np
 import datetime
 from netCDF4 import Dataset, date2num
 
+MONTH = "Jan"
 DATE = "20220215"
 TIME = "0030"
 WIDTH = 800
@@ -14,13 +15,13 @@ locate_y = {'pm': 232, 'ba': 10, 'va': 260}
 radars = ['va', 'ba', 'pm']
 
 def check_pixels(pixel_map, x, y, width, height, filter_size, num_count):
-    if x < filter_size or y < filter_size or x + filter_size // 2 >= width or y + filter_size // 2 >= height :
-        return False, 0
     count = 0
     closest_pixel = 0
     dif = 999999
     for i in range(-filter_size//2, filter_size // 2):
         for j in range(-filter_size//2, filter_size // 2):
+            if x - i < 0 or y - j < 0 or x + filter_size // 2 >= width or y + filter_size // 2 >= height :
+                continue
             if 100 < pixel_map[x - i, y - j] < 109:
                 count += 1
             elif dif > i + j:
@@ -34,7 +35,7 @@ def remove_interferences(orig_image, mod_image):
     width, height = orig_image.size
     for x in range(width):
         for y in range(height):
-            is_interf, closest_pixel = check_pixels(orig_pixel_map, x, y, width, height, 16, 150)
+            is_interf, closest_pixel = check_pixels(orig_pixel_map, x, y, width, height, 20, 230)
             if is_interf:
                 mod_pixel_map[x, y] = closest_pixel
     return mod_image
@@ -91,18 +92,14 @@ if __name__ == "__main__":
     main_radar = 'va'
     other_radars = ['ba', 'pm']
     save_folder = './joined'
-    path = f"./transfer_221072_files_ec30eaf2/dataset_v1/aemet/10min/{main_radar}/"
-    i = 0
-    for dir in os.listdir(path):
-        dir_path = os.path.join(path, dir)
-        for file in os.listdir(dir_path):
-            file_path = os.path.join(dir_path, file)
-            names_radars = [(file_path, main_radar)]
-            for other_radar in other_radars:
-                other_file = file_path.replace('va', other_radar)
-                names_radars.append((other_file, other_radar))
-            new_image = overlap(names_radars)
-            new_image.save(f'./joined/{file.split(".")[0]}.png')
-            break
-        break
-    # create_ncdf()
+    path = f"./use_cases/May/{main_radar}/"
+    
+    for file in os.listdir(path):
+        file_path = os.path.join(path, file)
+        names_radars = [(file_path, main_radar)]
+        for other_radar in other_radars:
+            other_file = file_path.replace('va', other_radar)
+            names_radars.append((other_file, other_radar))
+        new_image = overlap(names_radars)
+        new_image.save(f'./joined/{file.split(".")[0]}.png')
+    create_ncdf()
