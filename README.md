@@ -11,7 +11,9 @@ Radio interferences can be either stable or changing both in time and space and 
 
 The main file is ```full.py```, which consists the whole code. This code goes through the custom use_cases folder and gets all images for three radars. Joins them with the ```overlap``` function and corrects the interference with the ```remove_interferences``` function. In the end it saves processed images in joined folder. Also with the function ```create_ncdf``` it saves the data in myfile.nc file. 
 
-Below you can see some examples of our processed data. In the left, it shows the overlapped images, while the right demonstrates the picture with our 
+The folder joined_{date}_ with consists pictures ONLY overlapped images, while joined_{date} has with removed interference images.
+
+Below you can see some examples of our processed data. In the left, it shows the overlapped images, while the right demonstrates the picture with processed with our script. 
 
 ![image](https://user-images.githubusercontent.com/35425540/218045983-9147788b-e9b4-468b-ba9e-7885aa0e2255.png)
 
