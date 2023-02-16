@@ -25,10 +25,9 @@ Below you can see some examples of our processed data. In the left, it shows the
 
 ## Team members
 
-* Aicha Moussaid
-* Sherkhan Azimov
-* SM Zahid Hasan
-* Lunara Nurgaliyeva
-* Daria Butyrskaya
-* Moldir Koishybayeva
-
+* [Aicha Moussaid](https://github.com/AichaMsd)
+* [SM Zahid Hasan](https://github.com/Zahid7669)
+* [Lunara Nurgaliyeva](https://github.com/Lunara07)
+* [Daria Butyrskaya](https://github.com/dariabutyrskaya)
+* [Moldir Koishybayeva](https://github.com/m6search)
+* [Sherkhan Azimov](https://github.com/AzimovS)
